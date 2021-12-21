@@ -1,0 +1,20 @@
+name: navigation_stack
+description: A set of helpers to make using Flutter Navigation 2.0 easier.
+version: 0.0.1
+homepage: https://github.com/tim-smart/flutter_navigation_stack
+
+environment:
+  sdk: ">=2.15.0 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  bloc_stream: ^7.0.3
+  fast_immutable_collections: ^7.0.3
+  flutter:
+    sdk: flutter
+  fpdt: ^0.0.34
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
