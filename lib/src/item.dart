@@ -1,3 +1,5 @@
+import 'package:fpdt/tuple.dart';
+
 abstract class NavigationStackItemBase {
-  String get key;
+  Tuple2<String, String> get key;
 }

@@ -9,6 +9,9 @@ typedef NavigationStackItemFromKey<T> = Option<T> Function(
   String id,
 );
 
+String _itemToPath(NavigationStackItemBase item) =>
+    '${item.key.first}/${item.key.second}';
+
 class NavigationStackParser<T extends NavigationStackItemBase>
     extends RouteInformationParser<IList<T>> {
   NavigationStackParser({
@@ -23,7 +26,8 @@ class NavigationStackParser<T extends NavigationStackItemBase>
   Future<IList<T>> parseRouteInformation(
     RouteInformation routeInformation,
   ) {
-    final uri = Uri.parse(routeInformation.location ?? '/${defaultItem.key}');
+    final uri =
+        Uri.parse(routeInformation.location ?? '/${_itemToPath(defaultItem)}');
     final segments = uri.pathSegments;
     final pairs = Iterable.generate(
       segments.length ~/ 2,
@@ -50,7 +54,7 @@ class NavigationStackParser<T extends NavigationStackItemBase>
       configuration = configuration.add(defaultItem);
     }
 
-    final location = configuration.map((item) => item.key).join('/');
+    final location = configuration.map(_itemToPath).join('/');
     return RouteInformation(location: '/$location');
   }
 }
