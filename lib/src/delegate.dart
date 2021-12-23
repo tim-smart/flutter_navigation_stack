@@ -4,16 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:fpdt/fpdt.dart';
 import 'package:fpdt/option.dart' as O;
 
-import 'item.dart';
 import 'navigation_stack.dart' as navstack;
 
-typedef NavigationStackBuilder<T> = List<Page> Function(
+typedef NavigationStackBuilder<T> = Page Function(
   BuildContext context,
-  IList<T> stack,
+  T item,
 );
 
-class NavigationStackDelegate<T extends NavigationStackItemBase>
-    extends RouterDelegate<IList<T>>
+class NavigationStackDelegate<T> extends RouterDelegate<IList<T>>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   NavigationStackDelegate({
     required this.navigatorKey,
@@ -41,10 +39,13 @@ class NavigationStackDelegate<T extends NavigationStackItemBase>
     super.dispose();
   }
 
+  List<Page> _buildPages(BuildContext context) =>
+      stack.value.map((item) => builder(context, item)).toList();
+
   @override
   Widget build(BuildContext context) => Navigator(
         key: navigatorKey,
-        pages: builder(context, stack.value),
+        pages: _buildPages(context),
         onPopPage: (route, result) {
           if (!route.didPop(result)) {
             return false;
