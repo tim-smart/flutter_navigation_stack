@@ -1,3 +1,7 @@
+## 0.0.4
+
+- Allow for router nesting
+
 ## 0.0.3
 
 - Update fpdt
