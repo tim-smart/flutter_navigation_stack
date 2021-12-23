@@ -1,3 +1,7 @@
+## 0.0.3
+
+- Update fpdt
+
 ## 0.0.2
 
 - Statically enforce name / id key using tuple2
