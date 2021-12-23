@@ -9,12 +9,12 @@ environment:
 
 dependencies:
   bloc_stream: ^7.0.3
-  fast_immutable_collections: ^7.0.3
   flutter:
     sdk: flutter
-  fpdt: ^0.0.34
+  fpdt: ^0.0.35
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
+

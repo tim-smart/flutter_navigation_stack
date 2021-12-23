@@ -1,5 +1,4 @@
 import 'package:bloc_stream/bloc_stream.dart';
-import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:fpdt/fpdt.dart';
 import 'package:fpdt/option.dart' as O;
 
