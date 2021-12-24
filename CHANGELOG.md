@@ -1,3 +1,7 @@
+## 0.0.6
+
+- Improve `parentRoute` API
+
 ## 0.0.5
 
 - Improve `parentRoute` API

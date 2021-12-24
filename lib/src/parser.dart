@@ -29,12 +29,21 @@ class NavigationStackRoute<T> {
 }
 
 class NavigationStackRouter<T> {
-  NavigationStackRouter({
+  NavigationStackRouter._({
     required this.defaultItem,
     required this.routes,
     this.seperator = '/',
     this.seperatorOptional = false,
   });
+
+  factory NavigationStackRouter({
+    required T defaultItem,
+    required List<NavigationStackRoute<T>> routes,
+  }) =>
+      NavigationStackRouter._(
+        defaultItem: defaultItem,
+        routes: routes,
+      );
 
   final T defaultItem;
   final List<NavigationStackRoute<T>> routes;
@@ -87,18 +96,27 @@ class NavigationStackRouter<T> {
     required String key,
     required T Function(R parent) fromParent,
     required R Function(T item) toParent,
-  }) =>
-      NavigationStackRoute(
-        key: key,
-        fallback: toParent(defaultItem),
-        id: fromParent
-            .c(segmentFromItem)
-            .c(O.getOrElse(() => defaultUriSegment)),
-        fromId: parseSegment
-            .c(O.flatMap(itemFromSegment))
-            .c(O.getOrElse(() => defaultItem))
-            .c(toParent),
-      );
+    String seperator = '-',
+  }) {
+    final router = NavigationStackRouter._(
+      defaultItem: defaultItem,
+      routes: routes,
+      seperator: seperator,
+      seperatorOptional: true,
+    );
+
+    return NavigationStackRoute(
+      key: key,
+      fallback: toParent(router.defaultItem),
+      id: fromParent
+          .c(router.segmentFromItem)
+          .c(O.getOrElse(() => router.defaultUriSegment)),
+      fromId: parseSegment
+          .c(O.flatMap(router.itemFromSegment))
+          .c(O.getOrElse(() => router.defaultItem))
+          .c(toParent),
+    );
+  }
 
   RouteInformationParser<IList<T>> get parser =>
       NavigationStackParser(router: this);
