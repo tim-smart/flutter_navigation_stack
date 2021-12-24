@@ -1,3 +1,7 @@
+## 0.0.5
+
+- Improve `parentRoute` API
+
 ## 0.0.4
 
 - Allow for router nesting

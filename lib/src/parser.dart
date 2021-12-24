@@ -85,17 +85,19 @@ class NavigationStackRouter<T> {
 
   NavigationStackRoute<R> parentRoute<R>({
     required String key,
-    required T Function(R parent) from,
-    required R Function(T item) to,
+    required T Function(R parent) fromParent,
+    required R Function(T item) toParent,
   }) =>
       NavigationStackRoute(
         key: key,
-        fallback: to(defaultItem),
-        id: from.c(segmentFromItem).c(O.getOrElse(() => defaultUriSegment)),
+        fallback: toParent(defaultItem),
+        id: fromParent
+            .c(segmentFromItem)
+            .c(O.getOrElse(() => defaultUriSegment)),
         fromId: parseSegment
             .c(O.flatMap(itemFromSegment))
             .c(O.getOrElse(() => defaultItem))
-            .c(to),
+            .c(toParent),
       );
 
   RouteInformationParser<IList<T>> get parser =>
