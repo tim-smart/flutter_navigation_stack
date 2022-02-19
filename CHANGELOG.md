@@ -1,3 +1,7 @@
+## 0.0.7
+
+- Add riverpod helpers
+
 ## 0.0.6
 
 - Improve `parentRoute` API
