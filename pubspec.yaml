@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   fpdt: ^0.0.35
+  riverpod: ^1.0.3
 
 dev_dependencies:
   flutter_test:
