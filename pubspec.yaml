@@ -8,10 +8,9 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  bloc_stream: ^7.0.3
   flutter:
     sdk: flutter
-  fpdt: ^0.0.35
+  fpdt: ^0.0.63
   riverpod: ^1.0.3
 
 dev_dependencies:

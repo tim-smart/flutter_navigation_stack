@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fpdt/fpdt.dart';
-import 'package:fpdt/option.dart' as O;
 
-import 'navigation_stack.dart' as navstack;
+import 'navigation_stack.dart';
 
 typedef NavigationStackBuilder<T> = Page Function(
   BuildContext context,
@@ -18,12 +17,12 @@ class NavigationStackDelegate<T> extends RouterDelegate<IList<T>>
     required this.stack,
     required this.builder,
   }) : super() {
-    _subscription = stack.withCurrentValue.listen((_) {
+    _subscription = stack.stream.listen((_) {
       notifyListeners();
     });
   }
 
-  final navstack.NavigationStack<T> stack;
+  final NavigationStack<T> stack;
   final NavigationStackBuilder<T> builder;
   late final StreamSubscription<IList<T>> _subscription;
 
@@ -31,7 +30,7 @@ class NavigationStackDelegate<T> extends RouterDelegate<IList<T>>
   final GlobalKey<NavigatorState> navigatorKey;
 
   @override
-  IList<T> get currentConfiguration => stack.value;
+  IList<T> get currentConfiguration => stack.state;
 
   @override
   void dispose() {
@@ -40,7 +39,7 @@ class NavigationStackDelegate<T> extends RouterDelegate<IList<T>>
   }
 
   List<Page> _buildPages(BuildContext context) =>
-      stack.value.map((item) => builder(context, item)).toList();
+      stack.state.map((item) => builder(context, item)).toList();
 
   @override
   Widget build(BuildContext context) => Navigator(
@@ -51,16 +50,16 @@ class NavigationStackDelegate<T> extends RouterDelegate<IList<T>>
             return false;
           }
 
-          stack.add(navstack.pop<T>());
+          stack.run(navStackPop());
           return true;
         },
       );
 
   @override
   Future<void> setInitialRoutePath(IList<T> configuration) =>
-      setNewRoutePath(stack.initialStack.p(O.getOrElse(() => configuration)));
+      setNewRoutePath(stack.context.defaultStack);
 
   @override
   Future<void> setNewRoutePath(IList<T> configuration) async =>
-      stack.add(navstack.replace(configuration));
+      stack.run(navStackReplace(configuration));
 }

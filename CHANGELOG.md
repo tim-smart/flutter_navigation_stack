@@ -1,3 +1,7 @@
+## 0.1.0
+
+- Replace bloc_stream with fpdt state machine
+
 ## 0.0.7
 
 - Add riverpod helpers
