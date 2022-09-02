@@ -1,3 +1,7 @@
+## 0.1.1
+
+- Fix fpdt provider removal
+
 ## 0.1.0
 
 - Replace bloc_stream with fpdt state machine

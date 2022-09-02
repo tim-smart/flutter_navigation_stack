@@ -1,6 +1,6 @@
 name: navigation_stack
 description: A set of helpers to make using Flutter Navigation 2.0 easier.
-version: 0.1.0
+version: 0.1.1
 homepage: https://github.com/tim-smart/flutter_navigation_stack
 
 environment:
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fpdt: ^0.0.63
+  fpdt: ^0.0.65
   riverpod: ^1.0.3
 
 dev_dependencies:
