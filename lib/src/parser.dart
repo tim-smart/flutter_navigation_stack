@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdt/fpdt.dart';
 import 'package:fpdt/option.dart' as O;
@@ -151,9 +152,9 @@ class NavigationStackParser<T> extends RouteInformationParser<IList<T>> {
     );
 
     if (items.isEmpty) {
-      return Future.value(IList([router.defaultItem]));
+      return SynchronousFuture(IList([router.defaultItem]));
     }
-    return Future.value(items);
+    return SynchronousFuture(items);
   }
 
   @override
