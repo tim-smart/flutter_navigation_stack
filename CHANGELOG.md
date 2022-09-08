@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Use SynchronousFuture
+
 ## 0.1.1
 
 - Fix fpdt provider removal
