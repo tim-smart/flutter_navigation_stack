@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Replace state machine with ValueNotifier
+
 ## 0.1.2
 
 - Use SynchronousFuture
