@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdt/fpdt.dart';
 
@@ -16,13 +17,13 @@ class NavigationStackDelegate<T> extends RouterDelegate<IList<T>>
     required this.navigatorKey,
     required this.stack,
     required this.builder,
+    required this.fallback,
   }) : super() {
-    _subscription = stack.stream.listen((_) {
-      notifyListeners();
-    });
+    stack.addListener(notifyListeners);
   }
 
   final NavigationStack<T> stack;
+  final T fallback;
   final NavigationStackBuilder<T> builder;
   late final StreamSubscription<IList<T>> _subscription;
 
@@ -30,7 +31,7 @@ class NavigationStackDelegate<T> extends RouterDelegate<IList<T>>
   final GlobalKey<NavigatorState> navigatorKey;
 
   @override
-  IList<T> get currentConfiguration => stack.state;
+  IList<T> get currentConfiguration => stack.value;
 
   @override
   void dispose() {
@@ -39,7 +40,7 @@ class NavigationStackDelegate<T> extends RouterDelegate<IList<T>>
   }
 
   List<Page> _buildPages(BuildContext context) =>
-      stack.state.map((item) => builder(context, item)).toList();
+      stack.value.map((item) => builder(context, item)).toList();
 
   @override
   Widget build(BuildContext context) => Navigator(
@@ -50,16 +51,16 @@ class NavigationStackDelegate<T> extends RouterDelegate<IList<T>>
             return false;
           }
 
-          stack.run(navStackPop());
+          stack.pop();
           return true;
         },
       );
 
   @override
   Future<void> setInitialRoutePath(IList<T> configuration) =>
-      setNewRoutePath(stack.context.defaultStack);
+      SynchronousFuture(stack.replaceWith(fallback));
 
   @override
-  Future<void> setNewRoutePath(IList<T> configuration) async =>
-      stack.run(navStackReplace(configuration));
+  Future<void> setNewRoutePath(IList<T> configuration) =>
+      SynchronousFuture(stack.replace(configuration));
 }

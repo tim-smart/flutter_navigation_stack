@@ -2,11 +2,43 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdt/fpdt.dart';
 import 'package:fpdt/option.dart' as O;
+import 'package:navigation_stack/navigation_stack.dart';
 
 typedef NavigationStackItemFromKey<T> = Option<T> Function(
   String name,
   String id,
 );
+
+class NavigationStackRoot<T> {
+  NavigationStackRoot({
+    required T defaultItem,
+    required List<NavigationStackRoute<T>> routes,
+    required NavigationStackTransform<T> transform,
+    required NavigationStackBuilder<T> builder,
+  }) {
+    router = NavigationStackRouter(
+      routes: routes,
+      defaultItem: defaultItem,
+    );
+    stack = NavigationStack(
+      initialStack: IList([defaultItem]),
+      transform: transform,
+    );
+    delegate = NavigationStackDelegate(
+      navigatorKey: key,
+      builder: builder,
+      stack: stack,
+      fallback: defaultItem,
+    );
+    parser = router.parser;
+  }
+
+  final key = GlobalKey<NavigatorState>();
+  late final NavigationStackRouter<T> router;
+  late final NavigationStack<T> stack;
+  late final NavigationStackDelegate<T> delegate;
+  late final RouteInformationParser<IList<T>> parser;
+}
 
 class NavigationStackRoute<T> {
   const NavigationStackRoute({
