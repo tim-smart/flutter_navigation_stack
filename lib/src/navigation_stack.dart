@@ -7,7 +7,7 @@ class NavigationStack<T> extends ValueNotifier<IList<T>> {
   NavigationStack({
     IList<T> initialStack = const IListConst([]),
     required this.transform,
-  }) : super(initialStack);
+  }) : super(transform(initialStack));
 
   final NavigationStackTransform<T> transform;
 
