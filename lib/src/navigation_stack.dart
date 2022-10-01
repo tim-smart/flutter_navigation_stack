@@ -11,6 +11,11 @@ class NavigationStack<T> extends ValueNotifier<IList<T>> {
 
   final NavigationStackTransform<T> transform;
 
+  @override
+  set value(IList<T> items) {
+    super.value = transform(items);
+  }
+
   void push(T item) {
     value = value.add(item);
   }

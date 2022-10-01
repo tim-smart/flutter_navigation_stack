@@ -1,3 +1,7 @@
+## 0.2.1
+
+- Fix transform
+
 ## 0.2.0
 
 - Replace state machine with ValueNotifier
