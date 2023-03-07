@@ -1,7 +1,6 @@
+import 'package:elemental/elemental.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fpdt/fpdt.dart';
-import 'package:fpdt/option.dart' as O;
 import 'package:navigation_stack/navigation_stack.dart';
 
 typedef NavigationStackItemFromKey<T> = Option<T> Function(
@@ -99,7 +98,7 @@ class NavigationStackRouter<T> {
     },
   );
 
-  late final defaultRoute = routeFromItem(defaultItem).p(O.toNullable)!;
+  late final defaultRoute = routeFromItem(defaultItem).toNullable()!;
   late final defaultUriSegment =
       defaultRoute.toSegment(defaultItem).p(_segmentToString);
 
@@ -110,20 +109,22 @@ class NavigationStackRouter<T> {
 
   Option<T> itemFromSegment(Tuple2<String, String> segment) => _keys
       .lookup(segment.first)
-      .p(O.map((route) => route.idToItem(segment.second)));
+      .map((route) => route.idToItem(segment.second));
 
   Option<NavigationStackRoute<T>> routeFromItem(T item) =>
       _types.lookup(item.runtimeType);
 
   Option<String> segmentFromItem(T item) => routeFromItem(item)
-      .p(O.map((route) => route.toSegment(item).p(_segmentToString)));
+      .map((route) => route.toSegment(item).p(_segmentToString));
 
-  Option<Tuple2<String, String>> parseSegment(String segment) => segment
-      .split(seperator)
-      .p(O.fromPredicateK((parts) => parts.length <= 2 && parts.isNotEmpty))
-      .p(O.map((parts) => parts.length == 2
-          ? tuple2(parts.first, parts.last)
-          : tuple2(parts.first, '')));
+  Option<Tuple2<String, String>> parseSegment(String segment) =>
+      Option.fromPredicateMap<List<String>, Tuple2<String, String>>(
+        segment.split(seperator),
+        (parts) => parts.length <= 2 && parts.isNotEmpty,
+        (parts) => parts.length == 2
+            ? tuple2(parts.first, parts.last)
+            : tuple2(parts.first, ''),
+      );
 
   NavigationStackRoute<R> parentRoute<R>({
     required String key,
@@ -141,24 +142,21 @@ class NavigationStackRouter<T> {
     return NavigationStackRoute(
       key: key,
       fallback: toParent(router.defaultItem),
-      id: fromParent
-          .c(router.segmentFromItem)
-          .c(O.getOrElse(() => router.defaultUriSegment)),
-      fromId: parseSegment
-          .c(O.flatMap(router.itemFromSegment))
-          .c(O.getOrElse(() => router.defaultItem))
-          .c(toParent),
+      id: (_) => router
+          .segmentFromItem(fromParent(_))
+          .getOrElse(() => router.defaultUriSegment),
+      fromId: (id) => parseSegment(id)
+          .flatMap(router.itemFromSegment)
+          .getOrElse(() => router.defaultItem)
+          .p(toParent),
     );
   }
 
-  RouteInformationParser<IList<T>> get parser =>
-      NavigationStackParser(router: this);
+  RouteInformationParser<IList<T>> get parser => NavigationStackParser(this);
 }
 
 class NavigationStackParser<T> extends RouteInformationParser<IList<T>> {
-  NavigationStackParser({
-    required this.router,
-  });
+  NavigationStackParser(this.router);
 
   final NavigationStackRouter<T> router;
 
@@ -177,10 +175,10 @@ class NavigationStackParser<T> extends RouteInformationParser<IList<T>> {
 
     final items = pairs.fold<IList<T>>(
       IList(),
-      (acc, pair) => router.itemFromSegment(pair).p(O.fold(
+      (acc, pair) => router.itemFromSegment(pair).match(
             () => acc,
             (item) => acc.add(item),
-          )),
+          ),
     );
 
     if (items.isEmpty) {
@@ -196,10 +194,10 @@ class NavigationStackParser<T> extends RouteInformationParser<IList<T>> {
     }
 
     final location = configuration
-        .expand<String>((item) => router.segmentFromItem(item).p(O.fold(
+        .expand<String>((item) => router.segmentFromItem(item).match(
               () => [],
               (segment) => [segment],
-            )))
+            ))
         .join('/');
 
     return RouteInformation(location: '/$location');

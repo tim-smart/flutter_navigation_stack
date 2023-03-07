@@ -1,32 +1,25 @@
-import 'package:flutter/foundation.dart';
-import 'package:fpdt/fpdt.dart';
+import 'package:elemental/elemental.dart';
 
 typedef NavigationStackTransform<T> = IList<T> Function(IList<T> stack);
 
-class NavigationStack<T> extends ValueNotifier<IList<T>> {
+class NavigationStack<T> extends Ref<IList<T>> {
   NavigationStack({
     IList<T> initialStack = const IListConst([]),
     required this.transform,
-  }) : super(transform(initialStack));
+  }) : super.unsafeMake(initialStack);
 
   final NavigationStackTransform<T> transform;
 
   @override
-  set value(IList<T> items) {
-    super.value = transform(items);
+  void unsafeValueDidChange(IList<T> value) {
+    super.unsafeValueDidChange(transform(value));
   }
 
-  void push(T item) {
-    value = value.add(item);
-  }
+  IO<Unit> push(T item) => update((_) => _.add(item));
 
-  void pop() {
-    value = value.removeLast();
-  }
+  IO<Unit> get pop => update((_) => _.removeLast());
 
-  void replace(IList<T> stack) {
-    value = stack;
-  }
+  IO<Unit> replace(IList<T> stack) => set(stack);
 
-  void replaceWith(T item) => replace(IList([item]));
+  IO<Unit> replaceWith(T item) => replace(IList([item]));
 }

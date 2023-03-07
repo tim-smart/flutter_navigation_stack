@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Use `elemental`
+
 ## 0.2.2
 
 - transform initial stack
