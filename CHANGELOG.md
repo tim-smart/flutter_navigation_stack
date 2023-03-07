@@ -2,6 +2,10 @@
 
 - Use `elemental`
 
+## 0.2.3
+
+- pub upgrade
+
 ## 0.2.2
 
 - transform initial stack
